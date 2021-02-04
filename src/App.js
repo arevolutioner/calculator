@@ -27,47 +27,49 @@ class App extends React.Component {
   }
   
   
-  handleClick = (e) => {
+  _handleClick = (e) => {
     const { calc, lastPressed } = this.state;
     const { innerText } = e.target;
-    
-    switch(innerText) {
+
+    switch (innerText) {
       case 'AC': {
         this.setState({
           calc: '0',
         });
         break;
       }
-        
+
       case '=': {
+        // eslint-disable-next-line no-eval
         const evaluated = eval(calc);
         this.setState({
           calc: evaluated
         });
         break;
       }
-        
+
       case '.': {
+        // eslint-disable-next-line 
         const splitted = calc.split(/[\+\-\*\/]/);
         const last = splitted.slice(-1)[0];
-        
-        if(!last.includes('.')) {
+
+        if (!last.includes('.')) {
           this.setState({
-            calc: calc+'.'
-          })
+            calc: calc + '.'
+          });
         }
-        
+
         break;
       }
-        
+
       default: {
         let e = undefined;
         // check for other op
-        if(ops.includes(innerText)) {
-          if(ops.includes(lastPressed) && innerText !== '-') {
+        if (ops.includes(innerText)) {
+          if (ops.includes(lastPressed) && innerText !== '-') {
             // oh boii...
             const lastNumberIdx = calc.split('').reverse()
-                .findIndex(char => char !== ' ' && nums.includes(+char)); 
+              .findIndex(char => char !== ' ' && nums.includes(+char));
             e = calc.slice(0, calc.length - lastNumberIdx) + ` ${innerText} `;
           } else {
             e = `${calc} ${innerText} `;
@@ -75,20 +77,27 @@ class App extends React.Component {
         } else {
           e = (calc === '0') ? innerText : (calc + innerText);
         }
-        
+
         this.setState({
           calc: e
         });
       }
     }
-    
+
     this.setState({
       lastPressed: innerText
-    })
-    
+    });
+
+  };
+  get handleClick() {
+    return this._handleClick;
+  }
+  set handleClick(value) {
+    this._handleClick = value;
   }
   
   render() {
+    // eslint-disable-next-line 
     const { currentNumber, calc } = this.state;
     
     return (
